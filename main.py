@@ -32,8 +32,8 @@ def sphere(SPH_D_PARAMETER, SPH_P_PARAMETER, SPH_H_PARAMETER, SPH_R_PARAMETER):
     plt.rcParams["figure.autolayout"] = True
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
-    a,b,c = cart2sph(SPH_R_PARAMETER,1,1)
-    r = a #radius
+    # a,b,c = cart2sph(SPH_R_PARAMETER,1,1)
+    r = SPH_R_PARAMETER #radius
     u, v = np.mgrid[0:2 *np.pi:1000j,0:np.pi:1000j]
     # np.mgrid[b:2 *np.pi:30j,c:np.pi:20j]
     # np.mgrid[0:2 * np.pi:30j, 0:np.pi:20j]
