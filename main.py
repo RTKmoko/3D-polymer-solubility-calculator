@@ -18,7 +18,7 @@ def main():
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
-    u, v = np.mgrid[0:2*np.pi:1000j, 0:np.pi:1000j]
+    u, v = np.mgrid[0:2 * np.pi:1000j, 0:np.pi:1000j]
     # np.mgrid[b:2 *np.pi:30j,c:np.pi:20j]
     # np.mgrid[0:2 * np.pi:30j, 0:np.pi:20j]
 
@@ -28,10 +28,12 @@ def main():
         if not poly['enabled']:
             continue
         # Sphere
-        r = poly['r']
-        D = r*(np.cos(u) * np.sin(v))+poly['d']
-        P = r*(np.sin(u) * np.sin(v))+poly['p']
-        H = r*(np.cos(v))+poly['h']
+        ax.set_aspect('equal')
+        #TODO a bug after this line that makes the program start not from the normal viewing point
+        R = poly['r']
+        D = R*(np.cos(u) * np.sin(v))+(poly['d'])
+        P = R*(np.sin(u) * np.sin(v))+(poly['p'])
+        H = R*(np.cos(v))+(poly['h'])
         ax.plot_surface(D, P, H, cmap='gray', alpha=0.4)
 
     for sol in data['solvent']:
