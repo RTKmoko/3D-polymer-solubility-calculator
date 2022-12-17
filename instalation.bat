@@ -1,2 +1,2 @@
 @echo off
-pip install -r requirements.txt
+pipenv install -r requirements.txt
