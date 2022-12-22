@@ -137,6 +137,8 @@ class EntryUI():
                 self.delete_substance(idx)
         except:
             exit()
+#TODO need to move the solvents to start at 100 and so on(easier way of working if your checking the same solvent agian and agian and addig polymers)
+#TODO do an analitic tool to check where a mixture of solvents will solidify the polymer
 
 from rich.prompt import Prompt, FloatPrompt
 

@@ -4,8 +4,8 @@
             "name": "polycarbonate",
             "enabled": true,
             "d": 19.1,
-            "p": 19,
-            "h": 19,
+            "p": 7.9,
+            "h": 9.3,
             "r": 5.3
         }
     ],
@@ -19,10 +19,17 @@
         },
         {
             "name": "cyclo pentanone",
-            "enabled": true,
+            "enabled": false,
             "d": 17.9,
             "p": 11.9,
             "h": 5.2
+        },
+        {
+            "name": "MEK",
+            "enabled": true,
+            "d": 16.0,
+            "p": 9.0,
+            "h": 5.1
         }
     ]
 }
