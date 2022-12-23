@@ -1,7 +1,6 @@
 import json
-import rich
 
-
+MAX_SUBSTANCES = 100
 
 class EntryUI():
     
@@ -25,9 +24,10 @@ class EntryUI():
         EntryUI.save_data(self.data)
     
     def print_existing(self):
-        idx = 1
+        idx = 0
         print()
         print("[+] Existing substances:")
+        substance_group = 0
         for k,v in self.data.items():
             print(f'➡  {k.capitalize()}:')
             for subs in v:
@@ -35,12 +35,19 @@ class EntryUI():
                 enabled = subs['enabled']
                 print(f'\t{idx} - {"✔" if enabled else "✖"} - {name}')
                 idx += 1
+            substance_group += 1
+            idx = substance_group * MAX_SUBSTANCES
 
     def list_data(self):
-        array = []
+        array = {}
+        idx = 0
+        subs_group = 0
         for k,v in self.data.items():
             for substance in v:
-                array.append(substance)
+                array.update({idx: substance})
+                idx += 1
+            subs_group += 1
+            idx = subs_group * MAX_SUBSTANCES
         return array
 
     def add_substance(self):
@@ -69,17 +76,20 @@ class EntryUI():
     
     def delete_substance(self, index):
         for k,v in self.data.items():
-            if len(v) <= index:
-                index -= len(v)
+            if index >= MAX_SUBSTANCES:
+                index -= MAX_SUBSTANCES
                 continue
+            # if len(v) <= index:
+            #     index -= len(v)
+            #     continue
             del self.data[k][index]
             break
         self.save()
     
     def toggle_substance(self, index):
         for k,v in self.data.items():
-            if len(v) <= index:
-                index -= len(v)
+            if index >= MAX_SUBSTANCES:
+                index -= MAX_SUBSTANCES
                 continue
             self.data[k][index]['enabled'] = not self.data[k][index]['enabled']
             break
@@ -95,8 +105,9 @@ class EntryUI():
         self.print_existing()
         
         data_listing = self.list_data()
+        print(data_listing)
         try:
-            choice = Prompt.ask(f"[A] to add, [1-{len(data_listing)}] to select a substance, [X] to exit", default="x")
+            choice = Prompt.ask(f"[A] to add, [1-999] to select a substance, [X] to exit", default="x")
         except:
             exit()
         
@@ -111,12 +122,11 @@ class EntryUI():
         # Try parse to int
         try:
             choice = int(choice)
-            if choice < 0 or choice > len(data_listing):
+            if choice < 0 or choice > 999:
                 print("Out of range")
-            idx = choice -1 
 
             # Show info about the selected substance
-            subs = data_listing[idx]
+            subs = data_listing[choice]
             try:
                 radius = f'\n\tR: {subs["r"]}'
             except:
@@ -131,10 +141,10 @@ class EntryUI():
             _c2 = Prompt.ask("[T] To toggle (enabled/disabled) , [D] to delete")
             if _c2.lower() == 't':
                 # Toggle
-                self.toggle_substance(idx)
+                self.toggle_substance(choice)
             elif _c2.lower() == 'd':
                 # Delete
-                self.delete_substance(idx)
+                self.delete_substance(choice)
         except:
             exit()
 #TODO need to move the solvents to start at 100 and so on(easier way of working if your checking the same solvent agian and agian and addig polymers)
