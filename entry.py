@@ -1,4 +1,5 @@
 import json
+from rich.prompt import Prompt, FloatPrompt
 
 MAX_SUBSTANCES = 100
 
@@ -124,7 +125,7 @@ class EntryUI():
             percentage = FloatPrompt.ask('[?] Please enter percentage (0-100) for the first solvent:')
             
             # generate a name
-            combined_name = f'{abbrevation(sol1["name"])} ({percentage}) - ({100-percentage}) {abbrevation(sol2["name"])}'
+            combined_name = f'{abbrevation(sol1["name"])} ({int(percentage)}) - ({100-int(percentage)}) {abbrevation(sol2["name"])}'
             
             # calcultate middle between them
             d, p, h  = calc_2solvents(
@@ -240,7 +241,7 @@ class EntryUI():
 #TODO need to move the solvents to start at 100 and so on(easier way of working if your checking the same solvent agian and agian and addig polymers)
 #TODO do an analitic tool to check where a mixture of solvents will solidify the polymer
 
-from rich.prompt import Prompt, FloatPrompt
+
 
 if __name__ == '__main__':
     EntryUI()
