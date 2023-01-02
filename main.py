@@ -8,6 +8,11 @@ from pathlib import Path
 DATA_FILE = Path('data.json')
 
 
+def distance(point1, point2):
+  x1, y1, z1 = point1
+  x2, y2, z2 = point2
+  return m.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)
+
 def load_data():
     return json.loads(DATA_FILE.read_text())
 
@@ -35,6 +40,22 @@ def main():
         P = R*(np.sin(u) * np.sin(v))+(poly['p'])
         H = R*(np.cos(v))+(poly['h'])
         ax.plot_surface(D, P, H, cmap='gray', alpha=0.4)
+        print(f"for polymere {poly['name']}")
+        for sol in data['solvent']:
+            if not sol['enabled']:
+                continue
+            point1 = (poly['d'], poly['p'], poly['h'])
+            point2 = (sol['d'], sol['p'], sol['h'])
+            if R == distance(point1, point2):
+                x = distance(point1, point2)/R
+                print(f"the RED for solvent {sol['name']} is : {x}")
+            elif R > distance(point1, point2):
+                x = distance(point1, point2)/R
+                print(f"the RED for solvent {sol['name']} is : {x} (R is smaller than distance)")
+            else:
+                x = distance(point1, point2)/R
+                print(f"the RED is for solvent {sol['name']} : {x} (supposed to be R bigger than distance)")
+        
 
     for sol in data['solvent']:
         if not sol['enabled']:
@@ -42,7 +63,8 @@ def main():
         # Single point
         ax.scatter(sol['d'], sol['p'], sol['h'],c='r')
     plt.show()
-#TODO need to move the solvents to start at 100 and so on(easier way of working if your checking the same solvent agian and agian and addig polymers)
+
+
 
 if __name__ == '__main__':
     main()
