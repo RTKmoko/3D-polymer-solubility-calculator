@@ -4,8 +4,12 @@ from mpl_toolkits import mplot3d
 import math as m
 import json
 from pathlib import Path
+import itertools
+
+colors = itertools.cycle(["r", "b", "g"])
 
 DATA_FILE = Path('data.json')
+
 
 
 def distance(point1, point2):
@@ -44,24 +48,24 @@ def main():
         for sol in data['solvent']:
             if not sol['enabled']:
                 continue
-            point1 = (poly['d'], poly['p'], poly['h'])
-            point2 = (sol['d'], sol['p'], sol['h'])
-            if R == distance(point1, point2):
-                x = distance(point1, point2)/R
+            centerSphere = (poly['d'], poly['p'], poly['h'])
+            pointOfSol = (sol['d'], sol['p'], sol['h'])
+            if R == distance(centerSphere, pointOfSol):
+                x = distance(centerSphere, pointOfSol)/R
                 print(f"the RED for solvent {sol['name']} is : {x}")
-            elif R > distance(point1, point2):
-                x = distance(point1, point2)/R
+            elif R > distance(centerSphere, pointOfSol):
+                x = distance(centerSphere, pointOfSol)/R
                 print(f"the RED for solvent {sol['name']} is : {x} (R is smaller than distance)")
             else:
-                x = distance(point1, point2)/R
-                print(f"the RED is for solvent {sol['name']} : {x} (supposed to be R bigger than distance)")
-        
+                x = distance(centerSphere, pointOfSol)/R
+                print(f"the RED is for solvent {sol['name']} : {x} (R is bigger than distance)")
+
 
     for sol in data['solvent']:
         if not sol['enabled']:
             continue
         # Single point
-        ax.scatter(sol['d'], sol['p'], sol['h'],c='r')
+        ax.scatter(sol['d'], sol['p'], sol['h'],c=next(colors))
     plt.show()
 
 
