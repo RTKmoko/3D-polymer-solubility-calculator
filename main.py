@@ -11,6 +11,29 @@ colors = itertools.cycle(["r", "b", "g"])
 DATA_FILE = Path('data.json')
 
 
+def closest_point_percentage(center, point1, point2):
+  # Calculate the vector from point1 to point2
+  vec = point2 - point1
+  
+  # Calculate the vector from point1 to the center
+  vec_to_center = center - point1
+  
+  # Calculate the projection of vec_to_center onto vec
+  projection = np.dot(vec_to_center, vec) / np.dot(vec, vec)
+  
+  # Clamp the projection to the range [0, 1] to ensure that the
+  # resulting point is on the line segment between point1 and point2
+  projection = max(0, min(projection, 1))
+  
+  # Calculate the closest point on the line segment between point1 and point2
+  closest = point1 + projection * vec
+  
+  # Calculate the percentage of how much you went to each side between
+  # point1 and point2 to get to the closest point
+  percentage = projection * 100
+  
+  return percentage
+
 
 def distance(point1, point2):
   x1, y1, z1 = point1
@@ -48,8 +71,10 @@ def main():
         for sol in data['solvent']:
             if not sol['enabled']:
                 continue
-            centerSphere = (poly['d'], poly['p'], poly['h'])
-            pointOfSol = (sol['d'], sol['p'], sol['h'])
+            centerSphere = np.array((poly['d'], poly['p'], poly['h']))
+            pointOfSol = np.array((sol['d'], sol['p'], sol['h']))
+            pointOfSol2 = next(np.array((sol['d'], sol['p'], sol['h'])).flat)
+
             if R == distance(centerSphere, pointOfSol):
                 x = distance(centerSphere, pointOfSol)/R
                 print(f"the RED for solvent {sol['name']} is : {x}")
@@ -60,6 +85,7 @@ def main():
                 x = distance(centerSphere, pointOfSol)/R
                 print(f"the RED is for solvent {sol['name']} : {x} (R is bigger than distance)")
 
+            print(closest_point_percentage(centerSphere,pointOfSol,pointOfSol2))
 
     for sol in data['solvent']:
         if not sol['enabled']:
