@@ -1,7 +1,44 @@
 import json
 from rich.prompt import Prompt, FloatPrompt
+import numpy as np
+
 
 MAX_SUBSTANCES = 100
+
+
+
+
+def closest_point_percentage(center, point1, point2):
+        name, enabled, x1, y1, z1 = list(point1.values())
+        name, enabled, x2, y2, z2 = list(point2.values())
+        name, enabled, x3, y3, z3, r3 = list(center.values())
+
+        point1 = np.array((x1, y1, z1))
+        print(x1, y1, z1, point1)
+        point2 = np.array((x2, y2, z2))
+        point3 = np.array((x3, y3, z3))
+
+        # Calculate the vector from point1 to point2
+        vec = point2 - point1
+        
+        # Calculate the vector from point1 to the center
+        vec_to_center = point3 - point1
+        
+        # Calculate the projection of vec_to_center onto vec
+        projection = np.dot(vec_to_center, vec) / np.dot(vec, vec)
+        
+        # Clamp the projection to the range [0, 1] to ensure that the
+        # resulting point is on the line segment between point1 and point2
+        projection = max(0, min(projection, 1))
+        
+        # Calculate the closest point on the line segment between point1 and point2
+        closest = point1 + projection * vec
+        
+        # Calculate the percentage of how much you went to each side between
+        # point1 and point2 to get to the closest point
+        percentage = projection * 100
+        
+        return percentage , closest
 
 
 def calc_2solvents(point1, point2, percentage):
@@ -54,6 +91,7 @@ class EntryUI():
     def save(self):
         EntryUI.save_data(self.data)
     
+    
     def print_existing(self):
         idx = 0
         print()
@@ -81,6 +119,30 @@ class EntryUI():
             idx = subs_group * MAX_SUBSTANCES
         return array
 
+    def choose_polymer(self):
+        polymer = self.data['polymer']
+        print("\n[+] Existing polymer:")
+        for idx, pol in enumerate(polymer):
+            print(f'\t{idx} - {"✔" if pol["enabled"] else "✖"} - {pol["name"]}')
+
+        try:
+            choice = Prompt.ask(f"[0-{len(polymer)}] to select a substance, [X] to exit", default="x")
+        except:
+            exit()
+        if choice.lower() == 'x':
+            exit()
+
+        # Try parse to int
+        try:
+            choice = int(choice)
+            if choice < 0 or choice > len(polymer):
+                print("[!] Out of range")
+        except:
+            exit()
+
+        # Show info about the selected substance
+        return polymer[choice]
+
     def choose_solvent(self):
         solvents = self.data['solvent']
         print("\n[+] Existing solvents:")
@@ -105,13 +167,44 @@ class EntryUI():
         # Show info about the selected substance
         return solvents[choice]
 
+
+
     def add_substance(self):
         print("[+] Adding new substance")
 
-        c_type = Prompt.ask("Select type: [P] for Polymer, [S] for Solvent, [M] Solvent Mix")
-        if c_type.lower() not in ['p', 's', 'm']:
+        c_type = Prompt.ask("Select type: [P] for Polymer, [S] for Solvent, [M] Solvent Mix, [C] calculate the best mix")
+        if c_type.lower() not in ['p', 's', 'm', 'c']:
             exit()
-        if c_type.lower() == 'm':
+        if c_type.lower() == 'c':
+            print('[?] Choose first polymer:')
+            pol1 = self.choose_polymer()
+            
+            print('[?] Choose first solvent:')
+            sol1 = self.choose_solvent()
+            
+            print('[?] Choose second solvent:')
+            sol2 = self.choose_solvent()
+            
+            percentage, closest = closest_point_percentage(pol1 ,sol1 ,sol2)
+            print("[+] Calcultaed percentage is: ", percentage)
+
+            print("closest: ", closest)
+
+            d ,p ,h = closest
+
+            # generate a name by percentage
+            combined_name = f'{abbrevation(sol1["name"])} ({int(percentage)}) - ({100-int(percentage)}) {abbrevation(sol2["name"])}'
+            
+            newSubstance = {
+                'name': combined_name,
+                'enabled': True,
+                'd': d,
+                'p': p,
+                'h': h,
+            }
+            _type = 'solvent'
+            
+        elif c_type.lower() == 'm':
             # Mix 2/3 solvents
             # let user choose two (or three) solvents
 
