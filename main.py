@@ -77,3 +77,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+#TODO add all the solvents from the excel that eugene asked for. 
