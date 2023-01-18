@@ -98,7 +98,7 @@ class EntryUI():
         print("[+] Existing substances:")
         substance_group = 0
         for k,v in self.data.items():
-            print(f'➡  {k.capitalize()}:')
+            print(f'->  {k.capitalize()}:')
             for subs in v:
                 name = subs['name']
                 enabled = subs['enabled']

@@ -58,11 +58,11 @@ def main():
                 
             elif R > distance(centerSphere, pointOfSol):
                 x = distance(centerSphere, pointOfSol)/R
-                print(f"the RED for solvent {sol['name']} is : {x} (R is smaller than distance)")
+                print(f"the RED for solvent {sol['name']} is : {x} (RED is smaller than distance)")
                 
             else:
                 x = distance(centerSphere, pointOfSol)/R
-                print(f"the RED is for solvent {sol['name']} : {x} (R is bigger than distance)")
+                print(f"the RED is for solvent {sol['name']} : {x} (RED is bigger than distance)")
 
             ax.set_aspect('equal')
             
