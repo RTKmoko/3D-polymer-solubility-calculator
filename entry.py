@@ -14,7 +14,7 @@ def closest_point_percentage(center, point1, point2):
         name, enabled, x3, y3, z3, r3 = list(center.values())
 
         point1 = np.array((x1, y1, z1))
-        print(x1, y1, z1, point1)
+        # print(x1, y1, z1, point1)
         point2 = np.array((x2, y2, z2))
         point3 = np.array((x3, y3, z3))
 
@@ -94,7 +94,7 @@ class EntryUI():
     
     def print_existing(self):
         idx = 0
-        print()
+        # print()
         print("[+] Existing substances:")
         substance_group = 0
         for k,v in self.data.items():
