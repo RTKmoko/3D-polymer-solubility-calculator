@@ -102,7 +102,7 @@ class EntryUI():
             for subs in v:
                 name = subs['name']
                 enabled = subs['enabled']
-                print(f'\t{idx} - {"✔" if enabled else "✖"} - {name}')
+                print(f'\t{idx} - {"V" if enabled else "X"} - {name}')
                 idx += 1
             substance_group += 1
             idx = substance_group * MAX_SUBSTANCES
@@ -123,7 +123,7 @@ class EntryUI():
         polymer = self.data['polymer']
         print("\n[+] Existing polymer:")
         for idx, pol in enumerate(polymer):
-            print(f'\t{idx} - {"✔" if pol["enabled"] else "✖"} - {pol["name"]}')
+            print(f'\t{idx} - {"V" if pol["enabled"] else "X"} - {pol["name"]}')
 
         try:
             choice = Prompt.ask(f"[0-{len(polymer)}] to select a substance, [X] to exit", default="x")
@@ -147,7 +147,7 @@ class EntryUI():
         solvents = self.data['solvent']
         print("\n[+] Existing solvents:")
         for idx, sol in enumerate(solvents):
-            print(f'\t{idx} - {"✔" if sol["enabled"] else "✖"} - {sol["name"]}')
+            print(f'\t{idx} - {"V" if sol["enabled"] else "X"} - {sol["name"]}')
 
         try:
             choice = Prompt.ask(f"[0-{len(solvents)}] to select a substance, [X] to exit", default="x")
