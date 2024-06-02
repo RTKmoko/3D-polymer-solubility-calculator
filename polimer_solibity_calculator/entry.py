@@ -18,7 +18,7 @@ def calc_2solvents(point1, point2, percentage):
 #   for sol in data['solvent']:
 #         if not sol['enabled']:
 #             continue
-        
+
 #   x1, y1, z1 = point1
 #   x2, y2, z2 = point2
 #   x3, y3, z3 = point3
@@ -33,33 +33,30 @@ def abbrevation(string):
         return string
     return ''.join([l[0] for l in string.split()]).upper()
 
-class EntryUI():
-    
-    DATA_FILE_NAME = 'data.json'
-        
-    @staticmethod
-    def read_data() -> dict:
-        with open(EntryUI.DATA_FILE_NAME,'r') as f:
+
+class EntryUI:
+
+    def __init__(self, data_file):
+        self._data_file = data_file
+        self.data = self.deserialize()
+
+    def deserialize(self) -> dict:
+        with open(self._data_file, 'r') as f:
             return json.load(f)
 
-    @staticmethod
-    def save_data(data: dict):
-        with open(EntryUI.DATA_FILE_NAME,'w') as f:
-            return json.dump(data ,f, indent=4)
+    def serialize(self, data: dict):
+        with open(self._data_file, 'w') as f:
+            return json.dump(data, f, indent=4)
 
-    def __init__(self) -> None:
-        self.data = EntryUI.read_data()
-        self.main()
-    
-    def save(self):
-        EntryUI.save_data(self.data)
-    
+    # def save(self):
+    #     EntryUI.serialize(self.data)
+
     def print_existing(self):
         idx = 0
         print()
         print("[+] Existing substances:")
         substance_group = 0
-        for k,v in self.data.items():
+        for k, v in self.data.items():
             print(f'➡  {k.capitalize()}:')
             for subs in v:
                 name = subs['name']
@@ -73,7 +70,7 @@ class EntryUI():
         array = {}
         idx = 0
         subs_group = 0
-        for k,v in self.data.items():
+        for k, v in self.data.items():
             for substance in v:
                 array.update({idx: substance})
                 idx += 1
@@ -117,18 +114,18 @@ class EntryUI():
 
             print('[?] Choose first solvent:')
             sol1 = self.choose_solvent()
-            
+
             print('[?] Choose second solvent:')
             sol2 = self.choose_solvent()
-            
+
             # Enter percentage for first solvent
             percentage = FloatPrompt.ask('[?] Please enter percentage (0-100) for the first solvent:')
-            
+
             # generate a name
-            combined_name = f'{abbrevation(sol1["name"])} ({int(percentage)}) - ({100-int(percentage)}) {abbrevation(sol2["name"])}'
-            
+            combined_name = f'{abbrevation(sol1["name"])} ({int(percentage)}) - ({100 - int(percentage)}) {abbrevation(sol2["name"])}'
+
             # calcultate middle between them
-            d, p, h  = calc_2solvents(
+            d, p, h = calc_2solvents(
                 (sol1['d'], sol1['p'], sol1['h']),
                 (sol2['d'], sol2['p'], sol2['h']),
                 percentage / 100
@@ -160,11 +157,10 @@ class EntryUI():
         print('[+] Saving new substance:')
         print(json.dumps(newSubstance, indent=4))
         self.data[_type].append(newSubstance)
-        self.save()
+        self.serialize(self.data)
 
-    
     def delete_substance(self, index):
-        for k,v in self.data.items():
+        for k, v in self.data.items():
             if index >= MAX_SUBSTANCES:
                 index -= MAX_SUBSTANCES
                 continue
@@ -173,39 +169,41 @@ class EntryUI():
             #     continue
             del self.data[k][index]
             break
-        self.save()
-    
+        self.serialize(self.data)
+
     def toggle_substance(self, index):
-        for k,v in self.data.items():
+        for k, v in self.data.items():
             if index >= MAX_SUBSTANCES:
                 index -= MAX_SUBSTANCES
                 continue
             self.data[k][index]['enabled'] = not self.data[k][index]['enabled']
             break
-        self.save()
-    
-    def main(self):
+        self.serialize(self.data)
+
+    def __call__(self, **kwargs):
         # show data in a list, separated by the type
         # let user add or select any one from list
         # when selected can be enabled/disabled or deleted
-        
+
         # rich.print_json(json.dumps(self.data)) # DEBUG
-        
+
         self.print_existing()
-        
-        try:
-            choice = Prompt.ask(f"[A] to add, [1-999] to select a substance, [X] to exit", default="x")
-        except:
-            exit()
-        
+        assert 'polymer_type' in kwargs.keys(), "Polymer types missing"
+        choice: list = kwargs.get('polymer_type')
+
+        # try:
+        #     choice = Prompt.ask(f"[A] to add, [1-999] to select a substance, [X] to exit", default="x")
+        # except:
+        #     exit()
+
         # print('you chose: ', choice)
-        
+
         if choice.lower() == 'a':
             # Add
             return self.add_substance()
         elif choice.lower() == 'x':
             exit()
-        
+
         data_listing = self.list_data()
         # print(data_listing)
 
@@ -224,12 +222,12 @@ class EntryUI():
         except:
             radius = ''
 
-        print(f"\n[>] Selected substance is: '{subs['name']}'\n" + 
-                f"\tEnabled?: {'ENABLED' if subs['enabled'] else 'DISABLED'}\n" +
-                f"\tD: {subs['d']}\n" +
-                f"\tP: {subs['p']}\n" +
-                f"\tH: {subs['h']}" + radius)
-        
+        print(f"\n[>] Selected substance is: '{subs['name']}'\n" +
+              f"\tEnabled?: {'ENABLED' if subs['enabled'] else 'DISABLED'}\n" +
+              f"\tD: {subs['d']}\n" +
+              f"\tP: {subs['p']}\n" +
+              f"\tH: {subs['h']}" + radius)
+
         _c2 = Prompt.ask("[T] To toggle (enabled/disabled) , [D] to delete")
         if _c2.lower() == 't':
             # Toggle
@@ -240,8 +238,3 @@ class EntryUI():
 
 #TODO need to move the solvents to start at 100 and so on(easier way of working if your checking the same solvent agian and agian and addig polymers)
 #TODO do an analitic tool to check where a mixture of solvents will solidify the polymer
-
-
-
-if __name__ == '__main__':
-    EntryUI()

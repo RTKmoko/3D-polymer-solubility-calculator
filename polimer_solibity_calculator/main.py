@@ -68,7 +68,3 @@ def main():
         ax.scatter(sol['d'], sol['p'], sol['h'],c=next(colors))
     plt.show()
 
-
-
-if __name__ == '__main__':
-    main()
