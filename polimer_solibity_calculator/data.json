@@ -1,0 +1,49 @@
+{
+    "polymer": [
+        {
+            "name": "polycarbonate",
+            "enabled": true,
+            "d": 19.1,
+            "p": 7.9,
+            "h": 9.3,
+            "r": 5.3
+        }
+    ],
+    "solvent": [
+        {
+            "name": "Ethyl acetate",
+            "enabled": true,
+            "d": 15.8,
+            "p": 5.3,
+            "h": 7.2
+        },
+        {
+            "name": "cyclo pentanone",
+            "enabled": false,
+            "d": 17.9,
+            "p": 11.9,
+            "h": 5.2
+        },
+        {
+            "name": "MEK",
+            "enabled": true,
+            "d": 16.0,
+            "p": 9.0,
+            "h": 5.1
+        },
+        {
+            "name": "CP (50.0) - (50.0) EA",
+            "enabled": true,
+            "d": 16.85,
+            "p": 8.6,
+            "h": 6.2
+        },
+        {
+            "name": "EA (50) - (50) MEK",
+            "enabled": true,
+            "d": 15.9,
+            "p": 7.15,
+            "h": 6.15
+        }
+    ]
+}
