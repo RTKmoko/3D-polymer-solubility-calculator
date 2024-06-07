@@ -12,7 +12,7 @@ def calc_2solvents(point1, point2, percentage):
     z = z1 + (z2 - z1) * percentage
     return (x, y, z)
 
-
+#hello
 # def calc_3solvents(point1, point2, point3, percentage1, percentage2, percentage3):
 #   data = load_data()
 #   for sol in data['solvent']:
