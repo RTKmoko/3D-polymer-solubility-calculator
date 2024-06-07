@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   deploy:
-    environments: deployment
+    environment: deployment
     runs-on: self-hosted
 
     steps:
