@@ -1,9 +1,10 @@
 FROM python:3.8.10
 
-ADD test.py
+WORKDIR /opt
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip && \
+    pip install scikit-learn
 
-RUN pip install scikit-learn
+ADD test.py .
 
 CMD ["python","./test.py"]
