@@ -1,4 +1,4 @@
-# Solubility Calculator
+# Solubility Calculator (Version: <version>)
 
 ## Description
 

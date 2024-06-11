@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='3D-polymer-solubility-calculator',
+    name='pcs_3d',
     version='1.0.0',
     packages=find_packages(exclude=['.venv']),
     url='',
