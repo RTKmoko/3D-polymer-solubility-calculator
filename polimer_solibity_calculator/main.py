@@ -37,7 +37,7 @@ def main():
         if not poly['enabled']:
             continue
         # Sphere
-        ax.set_aspect('equal')
+        ax.set_aspect('auto')
         #TODO a bug after this line that makes the program start not from the normal viewing point
         R = poly['r']
         D = R*(np.cos(u) * np.sin(v))+(poly['d'])
@@ -66,5 +66,5 @@ def main():
             continue
         # Single point
         ax.scatter(sol['d'], sol['p'], sol['h'],c=next(colors))
-    plt.show()
+    plt.savefig('foo.png')
 
