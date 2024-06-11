@@ -1,3 +1,12 @@
 /build/
 /dist/
 /3D_polymer_solubility_calculator.egg-info/
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/runConfigurations/build_runner.xml
+/.idea/.gitignore
+/.idea/3D-polymer-solubility-calculator.iml
+/.idea/aws.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
