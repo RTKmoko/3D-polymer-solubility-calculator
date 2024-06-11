@@ -15,10 +15,10 @@ ENV TOKEN=''
 # Install necessary tools
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y tar curl sudo && \
+    apt-get install -y tar curl sudo make gcc vim && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-#    mkdir -p $WORK_DIR
+#RUN apt-get install -y libicu-dev
 
 ENV WORK_DIR=/home/${USER}
 # Create a non-root user in the container
@@ -28,8 +28,7 @@ RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 WORKDIR $WORK_DIR
 USER $USER
 RUN curl -o runner.tar.gz -L ${RUNNER_URL} && \
-    tar zxvf runner.tar.gz && \
-    sudo ./bin/installdependencies.sh
+    tar zxvf runner.tar.gz
 
 
 
