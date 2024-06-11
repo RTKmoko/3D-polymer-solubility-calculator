@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 env:
-  VERSION_FILE = "polimer_solibity_calculator/version.py"
+  VERSION_FILE="polimer_solibity_calculator/version.py"
 
 jobs:
   deploy:
@@ -40,12 +40,12 @@ jobs:
     - name: Forward major version
       if: github.ref == 'refs/heads/master'
       run: |
-        python version_info.py major forward 1
+        VERSION=$(python version_info.py ${{ env.VERSION_FILE }} major forward 1)
         echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
     - name: Forward minor version
       if: github.ref != 'refs/heads/master'
       run: |
-        python version_info.py minor forward 1
+        VERSION=$(python version_info.py ${{ env.VERSION_FILE }} minor forward 1)
         echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
     - name: Commit version
       env:
