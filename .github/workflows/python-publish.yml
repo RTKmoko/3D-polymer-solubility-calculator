@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 env:
-  VERSION_FILE="polimer_solibity_calculator/version.py"
+  VERSION_FILE: "polimer_solibity_calculator/version.py"
 
 jobs:
   deploy:
