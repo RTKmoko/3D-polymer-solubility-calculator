@@ -1,9 +1,11 @@
 import os.path
 import importlib.util
+import shutil
 import sys
 from os import PathLike
 from operator import add, sub
 from enum import IntEnum, Enum
+from typing import Tuple, Optional
 
 
 class VersionLevel(IntEnum):
@@ -18,9 +20,18 @@ class Direction(Enum):
 
 
 class VersionInfo:
-    def __init__(self, file: PathLike):
+    def __init__(self, file: PathLike, backup: bool = False):
         self._version_file = file
-        self._current_version = self.load()
+        self._backup_flag = backup
+        self._current_version: Optional[Tuple[int, int, int], None] = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type:
+            raise exc_type(exc_val, exc_tb)
+        self.store()
 
     def load(self):
         """
@@ -37,18 +48,18 @@ class VersionInfo:
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
-        if hasattr(module, 'version'):
-            version = module.version
-            if isinstance(version, tuple) and all(isinstance(i, int) for i in version):
-                return f'{version}'
-            else:
-                raise ValueError("Version information is not in the correct format (int, int, int)")
-        else:
-            raise AttributeError("Module does not contain 'version' attribute")
+        assert hasattr(module, 'VERSION'), "Module does not contain 'VERSION' attribute"
+        major, minor, patch = [int(i) for i in module.VERSION.split('.', 3)]
+        self._current_version = major, minor, patch
 
-    def set(self, version_lvl: VersionLevel, direct_ion: Direction, step1: int):
+    @property
+    def version(self):
+        return '.'.join(map(str, self._current_version))
+
+    def set(self, version_lvl: VersionLevel, direct_ion: Direction, step: int):
         """
         Modify current version
+        :param step:
         :param version_lvl: major, minor, patch
         :param direct_ion: use operator
         :param step1: count of version point
@@ -59,7 +70,7 @@ class VersionInfo:
         operator_func = direct_ion.value
 
         # Update the version number at the specified level
-        version_list[level_index] = operator_func(version_list[level_index], int(step1))
+        version_list[level_index] = operator_func(version_list[level_index], int(step))
 
         # Ensure no negative version numbers
         if version_list[level_index] < 0:
@@ -67,12 +78,19 @@ class VersionInfo:
 
         # Return the updated version string
         self._current_version = tuple(version_list)
-        return ','.join(map(str, self._current_version))
+
+    def store(self):
+        with open(self._version_file, 'w+') as version:
+            version.write(f"VERSION = '{self.version}'\n")
 
 
 if __name__ == '__main__':
-    version_file, version_level, operation, direction, step = sys.argv[1:]
+    version_file, version_level, direction, step_ = sys.argv[1:]
 
-    version_str = VersionInfo(version_file).set(VersionLevel[version_level], Direction[direction], step)
+    with VersionInfo(version_file) as ver:
+        ver.load()
+        ver.set(VersionLevel[version_level], Direction[direction], step_)
+        version_str = ver.version
+
     os.environ['VERSION'] = version_str
     sys.exit(version_str)
