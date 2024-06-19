@@ -14,7 +14,7 @@ on:
     types: [published]
   push:
     branches:
-      - origin/learn_branch
+      - learn_branch
 
 permissions:
   contents: read
