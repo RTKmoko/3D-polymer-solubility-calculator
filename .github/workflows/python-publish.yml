@@ -14,7 +14,7 @@ on:
     types: [published]
   push:
     branches:
-      - learn_branch
+      - '*'
 
 permissions:
   contents: read
@@ -25,7 +25,7 @@ env:
 jobs:
   deploy:
 
-    runs-on: [ self-hosted, ubuntu-latest ]
+    runs-on: [ self-hosted, ubuntu-latest, MacO ]
 
     steps:
     #      - name: Set interrupt
