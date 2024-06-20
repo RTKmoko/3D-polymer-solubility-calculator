@@ -1,12 +1,11 @@
 import os.path
 import importlib.util
-import shutil
 import sys
 from os import PathLike
 from operator import add, sub
 from enum import IntEnum, Enum
 from typing import Tuple, Optional
-#well this is just for test
+
 
 class VersionLevel(IntEnum):
     major = 0
@@ -34,10 +33,6 @@ class VersionInfo:
         self.store()
 
     def load(self):
-        """
-        Import version file from path: self._version_file using importlib.util
-        :return: version string in format int,int,int
-        """
         if not os.path.isfile(self._version_file):
             raise FileNotFoundError(f"Version file not found: {self._version_file}")
 
@@ -57,14 +52,6 @@ class VersionInfo:
         return '.'.join(map(str, self._current_version))
 
     def set(self, version_lvl: VersionLevel, direct_ion: Direction, step: int):
-        """
-        Modify current version
-        :param step:
-        :param version_lvl: major, minor, patch
-        :param direct_ion: use operator
-        :param step1: count of version point
-        :return:
-        """
         version_list = list(self._current_version)
         level_index = version_lvl.value
         operator_func = direct_ion.value
