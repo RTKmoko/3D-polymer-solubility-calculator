@@ -24,7 +24,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: [ self-hosted, ubuntu-latest ]
+    runs-on: [ self-hosted ]
 
     steps:
     - name: Set up Python
