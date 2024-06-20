@@ -5,7 +5,10 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-
+    #      - name: Set interrupt
+    #        uses: mxschmitt/action-tmate@v3
+    #        with:
+    #          limit-access-to-actor: false
 
 name: Upload Python Package
 
@@ -29,10 +32,6 @@ jobs:
     runs-on: [ self-hosted, ubuntu-latest, macOS ]
 
     steps:
-    #      - name: Set interrupt
-    #        uses: mxschmitt/action-tmate@v3
-    #        with:
-    #          limit-access-to-actor: false
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
