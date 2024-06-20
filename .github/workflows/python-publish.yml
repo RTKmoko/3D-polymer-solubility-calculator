@@ -48,14 +48,14 @@ jobs:
     - name: Forward major version
       if: github.ref == 'refs/heads/master'
       run: |
-        export VERSION=$(python version_info.py ${{ env.VERSION_FILE }} major forward 1)
-        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
+        VERSION=$(python version_info.py $VERSION_FILE major forward 1)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Forward minor version
       if: github.ref != 'refs/heads/master'
       run: |
-        export VERSION=$(python version_info.py ${{ env.VERSION_FILE }} minor forward 1)
-        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
+        VERSION=$(python version_info.py $VERSION_FILE minor forward 1)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Print version (for debugging)
       run: echo "VERSION=${{ env.VERSION }}"
@@ -64,9 +64,9 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       run: |
-        git add ${{ env.VERSION_FILE }}
-        git commit -m "Automated version ${{ env.VERSION }} commit"
-        git push origin ${{ github.ref }}
+        git add $VERSION_FILE
+        git commit -m "Automated version $VERSION commit"
+        git push origin $GITHUB_REF
 
     - name: Build package
       run: |
