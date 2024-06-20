@@ -1,5 +1,6 @@
 import json
 from rich.prompt import Prompt, FloatPrompt
+import rich
 
 MAX_SUBSTANCES = 100
 
@@ -10,7 +11,7 @@ def calc_2solvents(point1, point2, percentage):
     x = x1 + (x2 - x1) * percentage
     y = y1 + (y2 - y1) * percentage
     z = z1 + (z2 - z1) * percentage
-    return (x, y, z)
+    return x, y, z
 
 
 # def calc_3solvents(point1, point2, point3, percentage1, percentage2, percentage3):
@@ -96,11 +97,10 @@ class EntryUI:
             choice = int(choice)
             if choice < 0 or choice > len(solvents):
                 print("[!] Out of range")
-        except:
-            exit()
 
-        # Show info about the selected substance
-        return solvents[choice]
+        finally:
+            # Show info about the selected substance
+            return solvents[choice]
 
     def add_substance(self):
         print("[+] Adding new substance")
@@ -124,7 +124,7 @@ class EntryUI:
             # generate a name
             combined_name = f'{abbrevation(sol1["name"])} ({int(percentage)}) - ({100 - int(percentage)}) {abbrevation(sol2["name"])}'
 
-            # calcultate middle between them
+            # calculate middle between them
             d, p, h = calc_2solvents(
                 (sol1['d'], sol1['p'], sol1['h']),
                 (sol2['d'], sol2['p'], sol2['h']),
@@ -184,19 +184,16 @@ class EntryUI:
         # show data in a list, separated by the type
         # let user add or select any one from list
         # when selected can be enabled/disabled or deleted
-
-        # rich.print_json(json.dumps(self.data)) # DEBUG
+        rich.print_json(json.dumps(self.data))  # DEBUG
 
         self.print_existing()
         assert 'polymer_type' in kwargs.keys(), "Polymer types missing"
-        choice: list = kwargs.get('polymer_type')
+        choice = kwargs.get('polymer_type')
 
-        # try:
-        #     choice = Prompt.ask(f"[A] to add, [1-999] to select a substance, [X] to exit", default="x")
-        # except:
-        #     exit()
-
-        # print('you chose: ', choice)
+        try:
+            choice = Prompt.ask(f"[A] to add, [1-999] to select a substance, [X] to exit", default="x")
+        finally:
+            print('you chose: ', choice)
 
         if choice.lower() == 'a':
             # Add
@@ -235,6 +232,3 @@ class EntryUI:
         elif _c2.lower() == 'd':
             # Delete
             self.delete_substance(choice)
-
-#TODO need to move the solvents to start at 100 and so on(easier way of working if your checking the same solvent agian and agian and addig polymers)
-#TODO do an analitic tool to check where a mixture of solvents will solidify the polymer
