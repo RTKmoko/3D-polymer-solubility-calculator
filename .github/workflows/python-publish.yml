@@ -5,10 +5,7 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-    #      - name: Set interrupt
-    #        uses: mxschmitt/action-tmate@v3
-    #        with:
-    #          limit-access-to-actor: false
+
 
 name: Upload Python Package
 
@@ -48,13 +45,13 @@ jobs:
     - name: Forward major version
       if: github.ref == 'refs/heads/master'
       run: |
-        export VERSION=$(python version_info.py ${{ env.VERSION_FILE }} major forward 1)
-        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
-    - name: Forward minor version
-      if: github.ref != 'refs/heads/master'
-      run: |
-        VERSION=$(python version_info.py ${{ env.VERSION_FILE }} minor forward 1)
-        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
+#        export VERSION=$(python version_info.py ${{ env.VERSION_FILE }} major forward 1)
+#        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
+#    - name: Forward minor version
+#      if: github.ref != 'refs/heads/master'
+#      run: |
+#        VERSION=$(python version_info.py ${{ env.VERSION_FILE }} minor forward 1)
+#        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
     - name: Commit version
       env:
         ACCESS_TOKEN: ${{ secrets.TOKEN_GITHUB }}
