@@ -10,7 +10,6 @@
 name: Upload Python Package
 
 on:
-
   release:
     types: [published]
   push:
@@ -25,7 +24,6 @@ env:
 
 jobs:
   deploy:
-
     runs-on: [ self-hosted, ubuntu-latest ]
 
     steps:
@@ -33,25 +31,35 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.8'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install build
-    - uses: actions/checkout@v4
+
+    - name: Check out the repository
+      uses: actions/checkout@v4
+
     - name: Set interrupt
       uses: mxschmitt/action-tmate@v3
       with:
         limit-access-to-actor: false
+
     - name: Forward major version
       if: github.ref == 'refs/heads/master'
       run: |
-#        export VERSION=$(python version_info.py ${{ env.VERSION_FILE }} major forward 1)
-#        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
-#    - name: Forward minor version
-#      if: github.ref != 'refs/heads/master'
-#      run: |
-#        VERSION=$(python version_info.py ${{ env.VERSION_FILE }} minor forward 1)
-#        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
+        export VERSION=$(python version_info.py ${{ env.VERSION_FILE }} major forward 1)
+        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
+
+    - name: Forward minor version
+      if: github.ref != 'refs/heads/master'
+      run: |
+        export VERSION=$(python version_info.py ${{ env.VERSION_FILE }} minor forward 1)
+        echo "VERSION=${{VERSION}}" >> $GITHUB_ENV
+
+    - name: Print version (for debugging)
+      run: echo "VERSION=${{ env.VERSION }}"
+
     - name: Commit version
       env:
         ACCESS_TOKEN: ${{ secrets.TOKEN_GITHUB }}
@@ -59,9 +67,11 @@ jobs:
         git add ${{ env.VERSION_FILE }}
         git commit -m "Automated version ${{ env.VERSION }} commit"
         git push origin ${{ github.ref }}
+
     - name: Build package
       run: |
         python setup.py bdist_wheel
+
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
