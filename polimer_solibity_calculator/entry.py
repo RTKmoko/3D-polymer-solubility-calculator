@@ -29,7 +29,7 @@ def calc_2solvents(point1, point2, percentage):
 #   return (x, y, z)
 
 
-def abbrevation(string):
+def abbreviation(string):
     if ' ' not in string:
         return string
     return ''.join([l[0] for l in string.split()]).upper()
@@ -87,10 +87,10 @@ class EntryUI:
 
         try:
             choice = Prompt.ask(f"[0-{len(solvents)}] to select a substance, [X] to exit", default="x")
-        except:
-            exit()
-        if choice.lower() == 'x':
-            exit()
+
+        finally:
+            if choice.lower() == 'x':
+                exit()
 
         # Try parse to int
         try:
@@ -113,16 +113,16 @@ class EntryUI:
             # let user choose two (or three) solvents
 
             print('[?] Choose first solvent:')
-            sol1 = self.choose_solvent()
+            sol1 = self.choose_solvent
 
             print('[?] Choose second solvent:')
-            sol2 = self.choose_solvent()
+            sol2 = self.choose_solvent
 
             # Enter percentage for first solvent
             percentage = FloatPrompt.ask('[?] Please enter percentage (0-100) for the first solvent:')
 
             # generate a name
-            combined_name = f'{abbrevation(sol1["name"])} ({int(percentage)}) - ({100 - int(percentage)}) {abbrevation(sol2["name"])}'
+            combined_name = f'{abbreviation(sol1["name"])} ({int(percentage)}) - ({100 - int(percentage)}) {abbreviation(sol2["name"])}'
 
             # calculate middle between them
             d, p, h = calc_2solvents(
@@ -209,13 +209,14 @@ class EntryUI:
             choice = int(choice)
             if choice < 0 or choice > 999:
                 print("[!] Out of range")
-        except:
-            exit()
-
+        finally:
+            print('here')
         # Show info about the selected substance
         subs = data_listing[choice]
+
         try:
             radius = f'\n\tR: {subs["r"]}'
+
         except:
             radius = ''
 
@@ -226,6 +227,7 @@ class EntryUI:
               f"\tH: {subs['h']}" + radius)
 
         _c2 = Prompt.ask("[T] To toggle (enabled/disabled) , [D] to delete")
+
         if _c2.lower() == 't':
             # Toggle
             self.toggle_substance(choice)
