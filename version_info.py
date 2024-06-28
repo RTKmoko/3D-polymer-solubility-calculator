@@ -79,5 +79,5 @@ if __name__ == '__main__':
         ver.set(VersionLevel[version_level], Direction[direction], step_)
         version_str = ver.version
 
-    os.environ['VERSION'] = version_str
-    sys.exit(version_str)
+    # os.environ['VERSION'] = version_str
+    print(version_str)
