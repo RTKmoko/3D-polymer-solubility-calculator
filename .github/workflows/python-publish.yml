@@ -64,9 +64,12 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       run: |
-        git add $VERSION_FILE
-        git commit -m "Automated version $VERSION commit"
+        git config --global user.name ${{ secrets.GIT_USER }}
+        git config --global user.email ${{ secrets.GIT_MAIL }}
+        git add ${{ env.VERSION_FILE }}
+        git commit -m "Automated version ${{ env.VERSION }} commit"
         git push origin $GITHUB_REF
+        
 
     - name: Build package
       run: |
