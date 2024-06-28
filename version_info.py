@@ -70,14 +70,20 @@ class VersionInfo:
         with open(self._version_file, 'w+') as version:
             version.write(f"VERSION = '{self.version}'\n")
 
+    def update_readme(self, template, target='README.md', pattern='<version>'):
+        with open(template, 'r') as readme:
+            readme_str = ''.join(readme.readlines())
+            readme_str = readme_str.replace(pattern, self.version)
+        with open(target, 'w+') as writ_me:
+            writ_me.write(readme_str)
+
 
 if __name__ == '__main__':
-    version_file, version_level, direction, step_ = sys.argv[1:]
+    version_file, readme_template, version_level, direction, step_ = sys.argv[1:]
 
     with VersionInfo(version_file) as ver:
         ver.load()
         ver.set(VersionLevel[version_level], Direction[direction], step_)
         version_str = ver.version
-
-    # os.environ['VERSION'] = version_str
+        ver.update_readme(readme_template)
     print(version_str)

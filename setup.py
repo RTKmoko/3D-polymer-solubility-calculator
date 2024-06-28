@@ -1,12 +1,11 @@
 from setuptools import setup, find_packages
 from polimer_solibity_calculator.version import VERSION
 
-with open('readme_template.md', 'r') as readme:
+with open('README.md', 'r') as readme:
     README = ''.join(readme.readlines())
-    README = README.replace('<version>', VERSION)
 
-with open('README.md', 'w+') as w_help:
-    w_help.write(README)
+print(f"Build version: {VERSION}")
+
 
 setup(
     name='pcs_3d',
