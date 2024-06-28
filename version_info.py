@@ -38,8 +38,9 @@ class VersionInfo:
 
         f_path, f_name = os.path.split(self._version_file)
         module_name, _ = os.path.splitext(f_name)
-
+        print(f"Load: {f_path}, {f_name}, {module_name}")
         spec = importlib.util.spec_from_file_location(module_name, self._version_file)
+        print(f"Spec: {spec}")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
