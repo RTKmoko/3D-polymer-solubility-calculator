@@ -25,7 +25,7 @@ env:
 jobs:
   deploy:
     runs-on: [ self-hosted ]
-
+    environment: deployment
     steps:
 #    - name: Set up Python
 #      uses: actions/setup-python@v3
@@ -64,6 +64,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       run: |
+        echo "git token: '${{ secrets.TOKEN_GITHUB }}'"
         git config --global user.name ${{ secrets.GIT_USER }}
         git config --global user.email ${{ secrets.GIT_MAIL }}
         git config --global --list
