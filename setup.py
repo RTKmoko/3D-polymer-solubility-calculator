@@ -13,7 +13,7 @@ setup(
     packages=find_packages(exclude=['.venv']),
     url='',
     license='',
-    author='ronald',
+    author='Ronald Oguz',
     author_email='',
     description=README,
     package_data={
