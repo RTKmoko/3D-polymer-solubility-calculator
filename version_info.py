@@ -39,10 +39,12 @@ class VersionInfo:
         with open(self._version_file, 'r') as v_file:
             v_file_str = ''.join(v_file.readlines()).strip()
             print(f"File: {v_file_str}")
-            ver_name, ver_str = re.split(r"\s*=\s*", v_file_str, 2)
-            major, minor, patch = [int(i) for i in ver_str[1:-1].split('.')]
+            # ver_name, ver_str = re.split(r"\s*=\s*", v_file_str, 2)
+            # major, minor, patch = [int(i) for i in ver_str[1:-1].split('.')]
 
-        self._current_version = major, minor, patch
+        # self._current_version = major, minor, patch
+        self._current_version = 1, 1, 1
+
 
     @property
     def version(self):
