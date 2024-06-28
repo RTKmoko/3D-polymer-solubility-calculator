@@ -17,7 +17,7 @@ on:
       - 'learn_branch'
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   VERSION_FILE: "polimer_solibity_calculator/version.py"
@@ -64,7 +64,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       run: |
-        echo "git token: '${{ secrets.TOKEN_GITHUB }}'"
         git config --global user.name ${{ secrets.GIT_USER }}
         git config --global user.email ${{ secrets.GIT_MAIL }}
         git config --global --list
