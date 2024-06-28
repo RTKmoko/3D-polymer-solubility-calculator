@@ -62,7 +62,7 @@ jobs:
 
     - name: Commit version
       env:
-        ACCESS_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       run: |
         git config --global user.name ${{ secrets.GIT_USER }}
         git config --global user.email ${{ secrets.GIT_MAIL }}
