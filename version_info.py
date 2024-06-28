@@ -1,9 +1,9 @@
 import os.path
-import importlib.util
+import re
 import sys
-from os import PathLike
-from operator import add, sub
 from enum import IntEnum, Enum
+from operator import add, sub
+from os import PathLike
 from typing import Tuple, Optional
 
 
@@ -36,21 +36,10 @@ class VersionInfo:
         if not os.path.isfile(self._version_file):
             raise FileNotFoundError(f"Version file not found: {self._version_file}")
 
-        f_path, f_name = os.path.split(self._version_file)
-        # module_name, _ = os.path.splitext(f_name)
-        # print(f"Load: {f_path}, {f_name}, {module_name}")
-        # spec = importlib.util.spec_from_file_location(module_name, self._version_file)
-        # print(f"Spec: {spec}")
-        # module = importlib.util.module_from_spec(spec)
-        # spec.loader.exec_module(module)
-
-        # assert hasattr(module, 'VERSION'), "Module does not contain 'VERSION' attribute"
-        # major, minor, patch = [int(i) for i in module.VERSION.split('.', 3)]
-
         with open(self._version_file, 'r') as v_file:
-            v_file_str = ''.join(v_file.readlines())
-            ver_name, ver_str = v_file_str.split('=', 2)
-            major, minor, patch = [int(i) for i in ver_str.strip()[1:-1].split('.')]
+            v_file_str = ''.join(v_file.readlines()).strip()
+            ver_name, ver_str = re.split(r"\s*=\s*", v_file_str, 2)
+            major, minor, patch = [int(i) for i in ver_str[1:-1].split('.')]
 
         self._current_version = major, minor, patch
 
