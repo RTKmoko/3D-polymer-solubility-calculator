@@ -37,10 +37,10 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v4
 
-#    - name: Set interrupt
-#      uses: mxschmitt/action-tmate@v3
-#      with:
-#        limit-access-to-actor: false
+    - name: Set interrupt
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: false
 
     - name: Forward major version
       if: github.ref == 'refs/heads/master'
