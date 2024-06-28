@@ -27,15 +27,15 @@ jobs:
     runs-on: [ self-hosted ]
 
     steps:
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.8'
+#    - name: Set up Python
+#      uses: actions/setup-python@v3
+#      with:
+#        python-version: '3.8'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build
+        python -m pip install setuptools wheel 
 
     - name: Check out the repository
       uses: actions/checkout@v4
@@ -48,13 +48,13 @@ jobs:
     - name: Forward major version
       if: github.ref == 'refs/heads/master'
       run: |
-        VERSION=$(python version_info.py $VERSION_FILE major forward 1)
+        VERSION=$(python version_info.py ${{ env.VERSION_FILE }} major forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Forward minor version
       if: github.ref != 'refs/heads/master'
       run: |
-        VERSION=$(python version_info.py $VERSION_FILE minor forward 1)
+        VERSION=$(python version_info.py ${{ env.VERSION_FILE }} minor forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Print version (for debugging)
