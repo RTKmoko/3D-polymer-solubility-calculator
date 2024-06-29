@@ -47,7 +47,7 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v4
 
-    - name: Forward patch version
+    - name: Verify push not to master
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
         echo "Push to master prohibited"
