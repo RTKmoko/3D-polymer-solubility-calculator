@@ -28,7 +28,8 @@ env:
 
 jobs:
   deploy:
-    runs-on: [ self-hosted ]
+#    runs-on: [ self-hosted ]
+    runs-on: [ ubuntu-latest ]
     environment: deployment
     steps:
 #    - name: Set interrupt
