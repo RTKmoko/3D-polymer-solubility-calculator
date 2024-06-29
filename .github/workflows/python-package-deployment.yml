@@ -23,10 +23,10 @@ permissions:
   contents: write
 
 env:
-  UPDATE_SCRIPT: "${{ env.UPDATE_SCRIPT }}"
+  UPDATE_SCRIPT: "psc_3d_package/version_info.py"
   VERSION_FILE: "psc_3d_package/psc_3d/version.py"
   README_TEMPLATE: "psc_3d_package/readme_template.md"
-  README: "psc_3d_package/ƒ.md"
+  README: "psc_3d_package/README.md"
 
 jobs:
   deploy:
