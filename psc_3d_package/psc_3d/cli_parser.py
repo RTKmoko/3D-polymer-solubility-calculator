@@ -1,4 +1,3 @@
-import argparse
 import argparse as ap
 import sys
 
@@ -9,7 +8,7 @@ __doc__ = """
         
 """
 
-from psc_3d.version import VERSION
+from psc_3d_package.psc_3d.version import VERSION
 
 
 def parser(argv: list = None):

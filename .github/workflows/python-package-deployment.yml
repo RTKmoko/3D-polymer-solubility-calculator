@@ -23,8 +23,10 @@ permissions:
   contents: write
 
 env:
-  VERSION_FILE: "psc_3d/version.py"
-  README_TEMPLATE: "readme_template.md"
+  UPDATE_SCRIPT: "${{ env.UPDATE_SCRIPT }}"
+  VERSION_FILE: "psc_3d_package/psc_3d/version.py"
+  README_TEMPLATE: "psc_3d_package/readme_template.md"
+  README: "psc_3d_package/ƒ.md"
 
 jobs:
   deploy:
@@ -56,19 +58,19 @@ jobs:
     - name: Forward patch version
       if: github.event_name == 'push' && github.ref != 'refs/heads/master'
       run: |
-        VERSION=$(python3 version_info.py ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} patch forward 1)
+        VERSION=$(python3 ${{ env.UPDATE_SCRIPT }} ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} patch forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Forward minor version
       if: github.event_name == 'pull_request' && github.ref != 'refs/heads/master'
       run: |
-        VERSION=$(python3 version_info.py  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} minor forward 1)
+        VERSION=$(python3 ${{ env.UPDATE_SCRIPT }}  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} minor forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Forward major version
       if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
       run: |
-        VERSION=$(python3 version_info.py  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} major forward 1)
+        VERSION=$(python3 ${{ env.UPDATE_SCRIPT }}  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} major forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Commit version
@@ -79,7 +81,7 @@ jobs:
         git config --global user.email ${{ secrets.GIT_MAIL }}
         git config --global --list
         git status
-        git add ${{ env.VERSION_FILE }} README.md
+        git add ${{ env.VERSION_FILE }} ${{ env.README }}
         git commit -m "Automated version ${{ env.VERSION }} commit"
 
 #    - name: Set interrupt
@@ -88,6 +90,7 @@ jobs:
 #        limit-access-to-actor: false
     - name: Build package
       run: |
+        cd psc_3d_package
         python3 -m pip install -r requirements.txt
         python3 setup.py bdist_wheel
     - name: Publish package

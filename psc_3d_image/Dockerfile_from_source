@@ -1,0 +1,24 @@
+FROM python:3.8.3-buster
+
+WORKDIR /opt
+RUN mkdir -p /opt/venv
+# Update python, pip, venv
+RUN python3 -m venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    python3 -m pip install --upgrade pip
+ENV PATH=/opt/venv/bin:$PATH
+
+ADD psc_3d psc_3d
+ADD setup.py .
+ADD requirements.txt .
+ADD readme_template.md .
+ADD version_info.py .
+
+RUN python3 -m pip install pip --upgrade
+RUN python3 -m pip install -r requirements.txt
+
+RUN python3 setup.py bdist_wheel
+RUN python3 -m pip dist/*.whl
+
+ENTRYPOINT ["python3", "-m", "psc_3d"]
+CMD []
