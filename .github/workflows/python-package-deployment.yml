@@ -68,10 +68,10 @@ jobs:
         git status
         git add ${{ env.VERSION_FILE }} README.md
         git commit -m "Automated version ${{ env.VERSION }} commit"
-    - name: Set interrupt
-      uses: mxschmitt/action-tmate@v3
-      with:
-        limit-access-to-actor: false
+#    - name: Set interrupt
+#      uses: mxschmitt/action-tmate@v3
+#      with:
+#        limit-access-to-actor: false
     - name: Build package
       run: |
         python3 setup.py bdist_wheel
