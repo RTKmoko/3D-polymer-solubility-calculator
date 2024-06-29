@@ -1,0 +1,106 @@
+# This workflow will upload a Python Package using Twine when a release is created
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+
+name: Build & Upload Python Package
+
+on:
+  release:
+    types: [published]
+  push:
+    branches-ignore:
+      - master
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+env:
+  UPDATE_SCRIPT: "psc_3d_package/version_info.py"
+  VERSION_FILE: "psc_3d_package/psc_3d/version.py"
+  README_TEMPLATE: "psc_3d_package/readme_template.md"
+  README: "psc_3d_package/README.md"
+
+jobs:
+  deploy:
+#    runs-on: [ self-hosted ]
+    runs-on: [ ubuntu-latest ]
+    environment: deployment
+    steps:
+#    - name: Set interrupt
+#      uses: mxschmitt/action-tmate@v3
+#      with:
+#        limit-access-to-actor: false
+    - name: Install dependencies
+      run: |
+        mkdir -p $(pwd)/venv 
+        python3 -m venv $(pwd)/venv
+        source $(pwd)/venv/bin/activate
+        python3 -m pip install --upgrade pip
+        python3 -m pip install setuptools wheel 
+
+    - name: Check out the repository
+      uses: actions/checkout@v4
+
+    - name: Verify push not to master
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: |
+        echo "Push to master prohibited"
+        exit 1
+
+    - name: Forward patch version
+      if: github.event_name == 'push' && github.ref != 'refs/heads/master'
+      run: |
+        VERSION=$(python3 ${{ env.UPDATE_SCRIPT }} ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} ${{ env.README }} patch forward 1)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+    - name: Forward minor version
+      if: github.event_name == 'pull_request' && github.ref != 'refs/heads/master'
+      run: |
+        VERSION=$(python3 ${{ env.UPDATE_SCRIPT }}  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }}${{ env.README }} minor forward 1)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+    - name: Forward major version
+      if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
+      run: |
+        VERSION=$(python3 ${{ env.UPDATE_SCRIPT }}  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }}${{ env.README }} major forward 1)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+    - name: Commit version
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      run: |
+        git config --global user.name ${{ secrets.GIT_USER }}
+        git config --global user.email ${{ secrets.GIT_MAIL }}
+        git config --global --list
+        git status
+        git add ${{ env.VERSION_FILE }} ${{ env.README }}
+        git commit -m "Automated version ${{ env.VERSION }} commit"
+
+#    - name: Set interrupt
+#      uses: mxschmitt/action-tmate@v3
+#      with:
+#        limit-access-to-actor: false
+    - name: Build package
+      run: |
+        cd psc_3d_package
+        python3 -m pip install -r requirements.txt
+        python3 setup.py bdist_wheel
+        mv dist ../.
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_TOKEN }}
+    - name: Git Push
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      run: |
+        git push origin ${{ github.ref }}

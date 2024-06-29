@@ -8,6 +8,8 @@ __doc__ = """
         
 """
 
+from psc_3d.version import VERSION
+
 
 def parser(argv: list = None):
     parser_ = ap.ArgumentParser(description=__doc__)
@@ -20,6 +22,7 @@ def parser(argv: list = None):
     parser_.add_argument("-D", "--data_file", type=str, default='./data.json',
                          help="Data source"
                          )
+    parser_.add_argument('--version', '-v', action='version', version=VERSION)
 
     return parser_.parse_args(argv if argv else sys.argv[1:])
 
