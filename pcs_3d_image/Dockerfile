@@ -8,9 +8,9 @@ WORKDIR /opt
 
 ADD requirement.txt .
 
-RUN python -m pip install pip --upgrade \
-    && python -m pip install -r requirement.txt
+RUN python -m pip install pip --upgrade
+#RUN python -m pip install -r requirement.txt
 
 
-ENTRYPOINT ["python", "-m", "/usr/local/lib/python3.8/site-packages"]
+ENTRYPOINT ["python", "-m", "psc_3d"]
 CMD []
