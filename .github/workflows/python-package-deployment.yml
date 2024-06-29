@@ -68,6 +68,7 @@ jobs:
         git status
         git add ${{ env.VERSION_FILE }} README.md
         git commit -m "Automated version ${{ env.VERSION }} commit"
+
 #    - name: Set interrupt
 #      uses: mxschmitt/action-tmate@v3
 #      with:
