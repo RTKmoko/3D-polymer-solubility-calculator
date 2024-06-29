@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
-from psc_3d import VERSION
+from psc_3d.version import VERSION
+
 
 with open('README.md', 'r') as readme:
     README = ''.join(readme.readlines())
