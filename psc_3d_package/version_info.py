@@ -70,16 +70,16 @@ class VersionInfo:
         with open(template, 'r') as readme:
             readme_str = ''.join(readme.readlines())
             readme_str = readme_str.replace(pattern, self.version)
-        with open(target, 'w+') as writ_me:
-            writ_me.write(readme_str)
+        with open(target, 'w+') as write_me:
+            write_me.write(readme_str)
 
 
 if __name__ == '__main__':
-    version_file, readme_template, version_level, direction, step_ = sys.argv[1:]
+    version_file, readme_template, readme_target, version_level, direction, step_ = sys.argv[1:]
 
     with VersionInfo(version_file) as ver:
         ver.load()
         ver.set(VersionLevel[version_level], Direction[direction], step_)
         version_str = ver.version
-        ver.update_readme(readme_template)
+        ver.update_readme(readme_template, readme_target)
     print(version_str)
