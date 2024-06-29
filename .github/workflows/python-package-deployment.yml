@@ -93,10 +93,10 @@ jobs:
         cd psc_3d_package
         python3 -m pip install -r requirements.txt
         python3 setup.py bdist_wheel
+        mv dist ../.
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
-        path: psc_3d_package
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
     - name: Git Push
