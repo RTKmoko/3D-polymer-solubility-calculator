@@ -1,16 +1,16 @@
 from setuptools import setup, find_packages
-from polimer_solibity_calculator.version import VERSION
+from psc_3d.version import VERSION
 
 with open('README.md', 'r') as readme:
     README = ''.join(readme.readlines())
 
 print(f"Build version: {VERSION}")
 
-with open('../requirements.txt') as f:
+with open('requirements.txt') as f:
     required_packages = f.read().splitlines()
 
 setup(
-    name='pcs_3d',
+    name='psc_3d',
     version=VERSION,
     packages=find_packages(exclude=['.venv']),
     url='',
@@ -20,7 +20,7 @@ setup(
     description=README,
     install_requires=required_packages,
     package_data={
-        'polimer_solibity_calculator': [
+        'psc_3d': [
             "scripts/*.sh",
             "scripts/*.bat",
             "data.json"

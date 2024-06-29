@@ -23,7 +23,7 @@ permissions:
   contents: write
 
 env:
-  VERSION_FILE: "polimer_solibity_calculator/version.py"
+  VERSION_FILE: "psc_3d/version.py"
   README_TEMPLATE: "readme_template.md"
 
 jobs:
