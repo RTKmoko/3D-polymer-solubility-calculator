@@ -13,8 +13,8 @@ on:
   release:
     types: [published]
   push:
-    branches:
-      - 'learn_branch'
+    branches-ignore:
+      - master
   pull_request:
     branches:
       - master
