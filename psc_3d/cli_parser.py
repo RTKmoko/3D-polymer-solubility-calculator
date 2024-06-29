@@ -1,3 +1,4 @@
+import argparse
 import argparse as ap
 import sys
 
@@ -7,6 +8,14 @@ __doc__ = """
         - prompt
         
 """
+
+from psc_3d.version import VERSION
+
+
+class ShowVersion(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        print(f"Version: {VERSION}")
+        sys.exit(1)
 
 
 def parser(argv: list = None):
@@ -20,6 +29,6 @@ def parser(argv: list = None):
     parser_.add_argument("-D", "--data_file", type=str, default='./data.json',
                          help="Data source"
                          )
-
+    parser_.add_argument('--version', action=ShowVersion)
     return parser_.parse_args(argv if argv else sys.argv[1:])
 
