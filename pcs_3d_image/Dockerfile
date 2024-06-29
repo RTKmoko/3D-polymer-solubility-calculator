@@ -13,5 +13,5 @@ ADD requirement.txt .
 RUN python3 -m pip install pip --upgrade
 RUN python3 -m pip install -r requirement.txt
 
-ENTRYPOINT ["python", "-m", "psc_3d"]
+ENTRYPOINT ["python3", "-m", "psc_3d"]
 CMD []
