@@ -45,8 +45,6 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v4
 
-
-
     - name: Forward major version
       if: github.ref == 'refs/heads/master'
       run: |
@@ -70,18 +68,17 @@ jobs:
         git add ${{ env.VERSION_FILE }} README.md
         git commit -m "Automated version ${{ env.VERSION }} commit"
 
-    - name: Git Push
-      env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-      run: |
-        git push origin ${{ github.ref }}
 
     - name: Build package
       run: |
         python3 setup.py bdist_wheel
-
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
+    - name: Git Push
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      run: |
+        git push origin ${{ github.ref }}
