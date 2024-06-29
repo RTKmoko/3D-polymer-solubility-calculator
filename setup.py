@@ -18,6 +18,7 @@ setup(
     author='Ronald Oguz',
     author_email='',
     description=README,
+    long_description_content_type="text/markdown",
     install_requires=required_packages,
     package_data={
         'psc_3d': [
