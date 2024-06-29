@@ -47,16 +47,21 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v4
 
-    - name: Forward major version
-      if: github.ref == 'refs/heads/master'
+    - name: Forward patch version
       run: |
-        VERSION=$(python3 version_info.py ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} major forward 1)
+        VERSION=$(python3 version_info.py ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} patch forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Forward minor version
-      if: github.ref != 'refs/heads/master'
+      if: ${{ github.event_name == 'pull_request' }}
       run: |
         VERSION=$(python3 version_info.py  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} minor forward 1)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+    - name: Forward major version
+      if: github.ref == 'refs/heads/master'
+      run: |
+        VERSION=$(python3 version_info.py  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} major forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Commit version
