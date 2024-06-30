@@ -118,7 +118,7 @@ jobs:
         export TAG=$(git describe --always | sed s/-/+/ | sed s/-/./g | sed s/^v//)
         echo "TAG=${TAG}" >> $GITHUB_ENV
     - name: Set up latest tag
-      if: github.ref = 'refs/heads/master'
+      if: github.ref == 'refs/heads/master'
       run: |
         echo "TAG=latest,${{ env.TAG }}" >> $GITHUB_ENV
     - name: Build Docker image
