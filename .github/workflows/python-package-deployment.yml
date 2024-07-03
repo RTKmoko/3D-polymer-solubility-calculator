@@ -76,7 +76,7 @@ jobs:
       run: |
         VERSION=$(python3 ${{ env.UPDATE_SCRIPT }}  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} ${{ env.README }} major forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
+        echo "export VERSION=${VERSION}" >> run_info.sh
     - name: Commit version
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
@@ -104,12 +104,11 @@ jobs:
       run: |
         git push origin ${{ github.ref }}
     - name: Store run info
-      if: always()
       uses: actions/upload-artifact@v3
       with:
         retention-days: 1
         name: run_info
-        path: ./run_info.sh
+        path: run_info.sh
 
   deploy_image:
     runs-on: ubuntu-latest
@@ -120,15 +119,17 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: run_info
-    - name: Check out the code
-      uses: actions/checkout@v2
 
     - name: Log in to Docker Hub
       run: |
-        cat run_info.sh
-        source run_info.sh
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
         echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+    - name: Load run info
+      run: |
+        cat run_info.sh
+        source run_info.sh
+    - name: Check out the code
+      uses: actions/checkout@v2
     - name: Build Docker image
       run: |
         cd psc_3d_image
