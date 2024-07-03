@@ -64,13 +64,13 @@ jobs:
       run: |
         VERSION=$(python3 ${{ env.UPDATE_SCRIPT }} ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} ${{ env.README }} patch forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
+        echo "export VERSION=${VERSION}" >> run_info.sh
     - name: Forward minor version
       if: github.event_name == 'pull_request' && github.ref != 'refs/heads/master'
       run: |
         VERSION=$(python3 ${{ env.UPDATE_SCRIPT }}  ${{ env.VERSION_FILE }} ${{ env.README_TEMPLATE }} ${{ env.README }} minor forward 1)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
+        echo "export VERSION=${VERSION}" >> run_info.sh
     - name: Forward major version
       if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
       run: |
@@ -103,28 +103,42 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
       run: |
         git push origin ${{ github.ref }}
+    - name: Store run info
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        retention-days: 1
+        name: run_info
+        path: ./run_info.sh
 
   deploy_image:
     runs-on: ubuntu-latest
     needs: deploy_package
     steps:
+    - name: Download run Info
+      uses: actions/download-artifact@v3
+      with:
+        name: run_info
     - name: Check out the code
       uses: actions/checkout@v2
 
     - name: Log in to Docker Hub
-      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-    - name: Set version tag
       run: |
-        export TAG=$(git describe --always | sed s/-/+/ | sed s/-/./g | sed s/^v//)
-        echo "TAG=${TAG}" >> $GITHUB_ENV
-    - name: Set up latest tag
-      if: github.ref == 'refs/heads/master'
-      run: |
-        echo "TAG=latest,${{ env.TAG }}" >> $GITHUB_ENV
+        cat run_info.sh
+        source run_info.sh
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
     - name: Build Docker image
       run: |
         cd psc_3d_image
         docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/psc_3d:${{ env.TAG }} .
-
-    - name: Push Docker image to Docker Hub
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/psc_3d:${{ env.TAG }} .
+        docker build -t psc_3d .
+    - name: Set version tag
+      run: |
+        docker tag psc_3d  ${{ secrets.DOCKERHUB_USERNAME }}/psc_3d:${{ env. VERSION }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/psc_3d:${{ env. VERSION }}
+    - name: Set up latest tag
+      if: github.ref == 'refs/heads/master'
+      run: |
+        docker tag psc_3d  ${{ secrets.DOCKERHUB_USERNAME }}/psc_3d:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/psc_3d:latest
