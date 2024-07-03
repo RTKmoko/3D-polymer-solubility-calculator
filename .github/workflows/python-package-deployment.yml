@@ -134,7 +134,6 @@ jobs:
     - name: Build Docker image
       run: |
         cd psc_3d_image
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/psc_3d:${{ env.TAG }} .
         docker build -t psc_3d .
     - name: Set version tag
       run: |
