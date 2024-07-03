@@ -1,4 +1,4 @@
-# Solubility Calculator (Version: 1.8.18)
+# Solubility Calculator (Version: 1.8.19)
 
 ## Description
 
